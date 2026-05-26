@@ -43,11 +43,36 @@ except:
 
 def build_loader(config):
     config.defrost()
-    dataset_train, config.MODEL.NUM_CLASSES = build_dataset(is_train=True, config=config)
-    config.freeze()
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build train dataset")
-    dataset_val, _ = build_dataset(is_train=False, config=config)
-    print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build val dataset")
+
+    # CIFAR 10으로 데이터셋 변경 코드
+    transform_train = transforms.Compose([
+        transforms.RandomCrop(32, padding=4),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+    ])
+
+    transform_val = transforms.Compose([
+        transforms.ToTensor(),
+    ])
+
+    dataset_train = datasets.CIFAR10(
+        root='./data',
+        train=True,
+        download=True,
+        transform=transform_train
+    )
+
+    dataset_val = datasets.CIFAR10(
+        root='./data',
+        train=False,
+        download=True,
+        transform=transform_val
+    )
+    # dataset_train, config.MODEL.NUM_CLASSES = build_dataset(is_train=True, config=config)
+    # config.freeze()
+    # print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build train dataset")
+    # dataset_val, _ = build_dataset(is_train=False, config=config)
+    # print(f"local rank {config.LOCAL_RANK} / global rank {dist.get_rank()} successfully build val dataset")
 
     num_tasks = dist.get_world_size()
     global_rank = dist.get_rank()
