@@ -95,7 +95,7 @@ def main(config):
         if param.requires_grad == True and hasattr(param, 'skip_allreduce') and param.skip_allreduce is True:
             model.add_param_to_skip_allreduce(name)
             param.register_hook(partial(hook_scale_grad, 1))
-            logger.info(f"[rank{dist.get_rank()}] [{name}] skip all_reduce and div {1} for grad")
+            logger.info(f"[rank{0}] [{name}] skip all_reduce and div {1} for grad")
 
     n_parameters_single = sum(p.numel() * model.sharded_count if hasattr(p, 'skip_allreduce')
                               else p.numel() for p in model.parameters() if p.requires_grad)
@@ -335,7 +335,7 @@ if __name__ == '__main__':
     torch.distributed.init_process_group(backend='nccl', init_method='env://', world_size=world_size, rank=rank)
     # torch.distributed.barrier()
 
-    seed = config.SEED #+ dist.get_rank()
+    seed = config.SEED #+ 0
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
     np.random.seed(seed)
@@ -360,7 +360,7 @@ if __name__ == '__main__':
     os.makedirs(config.OUTPUT, exist_ok=True)
     logger = create_logger(output_dir=config.OUTPUT, dist_rank=0, name=f"{config.MODEL.NAME}")
 
-    if dist.get_rank() == 0:
+    if 0 == 0:
         path = os.path.join(config.OUTPUT, "config.json")
         with open(path, "w") as f:
             f.write(config.dump())

@@ -109,7 +109,7 @@ def main(config):
         data_loader_train.sampler.set_epoch(epoch)
 
         train_one_epoch(config, model, data_loader_train, optimizer, epoch, lr_scheduler, scaler)
-        if dist.get_rank() == 0 and (epoch % config.SAVE_FREQ == 0 or epoch == (config.TRAIN.EPOCHS - 1)):
+        if 0 == 0 and (epoch % config.SAVE_FREQ == 0 or epoch == (config.TRAIN.EPOCHS - 1)):
             save_checkpoint(config, epoch, model_without_ddp, 0., optimizer, lr_scheduler, scaler, logger)
 
     total_time = time.time() - start_time
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     torch.distributed.init_process_group(backend='nccl', init_method='env://', world_size=world_size, rank=rank)
     # torch.distributed.barrier()
 
-    seed = config.SEED# + dist.get_rank()
+    seed = config.SEED# + 0
     torch.manual_seed(seed)
     np.random.seed(seed)
     cudnn.benchmark = True
@@ -222,7 +222,7 @@ if __name__ == '__main__':
     os.makedirs(config.OUTPUT, exist_ok=True)
     logger = create_logger(output_dir=config.OUTPUT, dist_rank=0, name=f"{config.MODEL.NAME}")
 
-    if dist.get_rank() == 0:
+    if 0 == 0:
         path = os.path.join(config.OUTPUT, "config.json")
         with open(path, "w") as f:
             f.write(config.dump())

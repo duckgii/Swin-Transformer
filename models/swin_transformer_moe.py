@@ -58,7 +58,7 @@ class MoEMlp(nn.Module):
         self.init_std = init_std
         self.mlp_fc2_bias = mlp_fc2_bias
 
-        self.dist_rank = dist.get_rank()
+        self.dist_rank = 0
 
         self._dropout = nn.Dropout(p=moe_drop)
 

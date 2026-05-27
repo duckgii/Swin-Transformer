@@ -21,8 +21,8 @@ def build_loader_finetune(config):
     config.freeze()
     dataset_val, _ = build_dataset(is_train=False, config=config)
 
-    num_tasks = dist.get_world_size()
-    global_rank = dist.get_rank()
+    num_tasks = 1
+    global_rank = 0
     sampler_train = DistributedSampler(
         dataset_train, num_replicas=num_tasks, rank=global_rank, shuffle=True
     )

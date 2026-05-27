@@ -29,7 +29,7 @@ def merge_moe_model_state_dict(moe_model_state_dict, non_moe_model_state_dict):
 
 
 def load_checkpoint(config, model, optimizer, lr_scheduler, loss_scaler, logger):
-    global_rank = dist.get_rank()
+    global_rank = 0
     logger.info(f"==============> Rank[{global_rank}] Resuming form {config.MODEL.RESUME}....................")
     if config.MODEL.RESUME.endswith(f'.pth'):
         if config.TRAIN.MOE.SAVE_MASTER:
@@ -62,7 +62,7 @@ def load_checkpoint(config, model, optimizer, lr_scheduler, loss_scaler, logger)
 
 
 def load_pretrained(config, model, logger):
-    global_rank = dist.get_rank()
+    global_rank = 0
     logger.info(f"==============> Rank[{global_rank}] Loading weight {config.MODEL.PRETRAINED} for fine-tuning......")
     if config.MODEL.PRETRAINED.endswith(f'.pth'):
         if config.TRAIN.MOE.SAVE_MASTER:
@@ -174,7 +174,7 @@ def load_pretrained(config, model, logger):
 
 def save_checkpoint(config, epoch, model, max_accuracy, optimizer, lr_scheduler, loss_scaler, logger,
                     zero_redundancy=False):
-    global_rank = dist.get_rank()
+    global_rank = 0
 
     if zero_redundancy:
         if config.TRAIN.MOE.SAVE_MASTER:
@@ -220,7 +220,7 @@ def save_checkpoint(config, epoch, model, max_accuracy, optimizer, lr_scheduler,
 
 
 def auto_resume_helper(output_dir, save_master=False):
-    global_rank = dist.get_rank()
+    global_rank = 0
     checkpoints = os.listdir(output_dir)
     if not save_master:
         master_checkpoints = [ckpt for ckpt in checkpoints if ckpt.endswith(f'pth.rank0')]
