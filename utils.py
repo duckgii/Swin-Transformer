@@ -174,10 +174,11 @@ def auto_resume_helper(output_dir):
 
 
 def reduce_tensor(tensor):
-    rt = tensor.clone()
-    dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-    rt /= 1
-    return rt
+    return tensor
+    # rt = tensor.clone()
+    # dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+    # rt /= 1
+    # return rt
 
 
 def ampscaler_get_grad_norm(parameters, norm_type: float = 2.0) -> torch.Tensor:

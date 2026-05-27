@@ -92,10 +92,11 @@ def auto_resume_helper(output_dir, logger):
 
 
 def reduce_tensor(tensor):
-    rt = tensor.clone()
-    dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-    rt /= 1
-    return rt
+    return tensor
+    # rt = tensor.clone()
+    # dist.all_reduce(rt, op=dist.ReduceOp.SUM)
+    # rt /= 1
+    # return rt
 
 
 def load_pretrained(config, model, logger):
