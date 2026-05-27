@@ -94,8 +94,8 @@ def main(config):
     for name, param in model.named_parameters():
         if param.requires_grad == True and hasattr(param, 'skip_allreduce') and param.skip_allreduce is True:
             model.add_param_to_skip_allreduce(name)
-            param.register_hook(partial(hook_scale_grad, dist.get_world_size()))
-            logger.info(f"[rank{dist.get_rank()}] [{name}] skip all_reduce and div {dist.get_world_size()} for grad")
+            param.register_hook(partial(hook_scale_grad, 1))
+            logger.info(f"[rank{dist.get_rank()}] [{name}] skip all_reduce and div {1} for grad")
 
     n_parameters_single = sum(p.numel() * model.sharded_count if hasattr(p, 'skip_allreduce')
                               else p.numel() for p in model.parameters() if p.requires_grad)
@@ -358,7 +358,7 @@ if __name__ == '__main__':
     config.freeze()
 
     os.makedirs(config.OUTPUT, exist_ok=True)
-    logger = create_logger(output_dir=config.OUTPUT, dist_rank=dist.get_rank(), name=f"{config.MODEL.NAME}")
+    logger = create_logger(output_dir=config.OUTPUT, dist_rank=0, name=f"{config.MODEL.NAME}")
 
     if dist.get_rank() == 0:
         path = os.path.join(config.OUTPUT, "config.json")

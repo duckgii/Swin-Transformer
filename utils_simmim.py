@@ -94,7 +94,7 @@ def auto_resume_helper(output_dir, logger):
 def reduce_tensor(tensor):
     rt = tensor.clone()
     dist.all_reduce(rt, op=dist.ReduceOp.SUM)
-    rt /= dist.get_world_size()
+    rt /= 1
     return rt
 
 

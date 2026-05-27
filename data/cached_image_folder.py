@@ -124,7 +124,7 @@ class DatasetFolder(data.Dataset):
         assert self.cache_mode in ["part", "full"]
         n_sample = len(self.samples)
         global_rank = dist.get_rank()
-        world_size = dist.get_world_size()
+        world_size = 1
 
         samples_bytes = [None for _ in range(n_sample)]
         start_time = time.time()
