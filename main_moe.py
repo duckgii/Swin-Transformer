@@ -333,7 +333,7 @@ if __name__ == '__main__':
         world_size = -1
     torch.cuda.set_device(config.LOCAL_RANK)
     torch.distributed.init_process_group(backend='nccl', init_method='env://', world_size=world_size, rank=rank)
-    torch.distributed.barrier()
+    # torch.distributed.barrier()
 
     seed = config.SEED + dist.get_rank()
     torch.manual_seed(seed)
