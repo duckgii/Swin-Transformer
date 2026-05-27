@@ -19,7 +19,7 @@ def load_checkpoint(config, model, optimizer, lr_scheduler, scaler, logger):
         checkpoint = torch.hub.load_state_dict_from_url(
             config.MODEL.RESUME, map_location='cpu', check_hash=True)
     else:
-        checkpoint = torch.load(config.MODEL.RESUME, map_location='cpu')
+        checkpoint = torch.load(config.MODEL.RESUME, map_location='cpu', weights_only=False)
 
     # re-map keys due to name change (only for loading provided models)
     rpe_mlp_keys = [k for k in checkpoint['model'].keys() if "rpe_mlp" in k]
